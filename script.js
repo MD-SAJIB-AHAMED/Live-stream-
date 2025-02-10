@@ -3,23 +3,28 @@ document.addEventListener("DOMContentLoaded", function () {
     const videoPlayer = document.getElementById("videoPlayer");
 
     // API থেকে JSON ডেটা লোড করা
-    fetch("https://raw.githubusercontent.com/0xJihan/Practice-Projects/main/Output.json")
-        .then(response => response.json())
-        .then(data => {
-            data.channels.forEach(channel => {
-                const listItem = document.createElement("li");
-                listItem.textContent = channel.name;
-                listItem.addEventListener("click", () => {
-                    playChannel(channel.url);
-                });
-                channelList.appendChild(listItem);
-            });
-        })
-        .catch(error => console.error("Error loading JSON:", error));
+    fetch("Output.json") // লোকাল JSON ফাইল
+    .then(response => response.json())
+    .then(data => loadChannels(data))
+    .catch(error => console.error("JSON লোড করতে সমস্যা:", error));
 
-    // স্ট্রিম চালানোর ফাংশন
-    function playChannel(url) {
-        videoPlayer.src = url;
-        videoPlayer.play();
-    }
+function loadChannels(data) {
+    const channelList = document.getElementById("channelList");
+    const videoPlayer = document.getElementById("videoPlayer");
+
+    data.channels.forEach(channel => {
+        const listItem = document.createElement("li");
+        listItem.textContent = channel.name;
+        listItem.addEventListener("click", () => {
+            playChannel(channel.url);
+        });
+        channelList.appendChild(listItem);
+    });
+}
+
+function playChannel(url) {
+    const videoPlayer = document.getElementById("videoPlayer");
+    videoPlayer.src = url;
+    videoPlayer.play();
+}
 });
